@@ -1,5 +1,9 @@
 package sweeper;
-
+/**
+ * Maps of easy levels.
+ * @author bl41
+ *
+ */
 public class EasyMap {
 
     private static int[][] nworld1 = new int[][] { { 0, 0, 0, 2, -1 }, { 0, 0, 0, 2, -1 }, { 1, 2, 1, 2, 1 }, { -1, 3, -1, 2, 0 },
@@ -17,6 +21,11 @@ public class EasyMap {
     private static int[][] nworld5 = new int[][] { { 0, 0, 0, 1, -1 }, { 1, 1, 1, 1, 1 }, { 2, -1, 2, 0, 0 }, { 3, -1, 3, 1, 0 },
             { -1, 3, -1, 1, 0 }, };
 
+    /**
+     * Method to get map according to user.
+     * @param num Number input by user
+     * @return Return the map
+     */
     public static int[][] getMap(int num){
         switch (num) {
         case 1:

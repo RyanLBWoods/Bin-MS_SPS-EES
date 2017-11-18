@@ -1,5 +1,9 @@
 package sweeper;
-
+/**
+ * Maps of hard level.
+ * @author bl41
+ *
+ */
 public class HardMap {
 
     private static int[][] nworld1 = new int[][] { { 0, 0, 0, 0, 2, -1, 4, -1, 2, -1 }, { 2, 2, 1, 0, 2, -1, -1, 4, 3, 2 },
@@ -29,6 +33,11 @@ public class HardMap {
             { 0, 0, 2, -1, 3, 3, -1, 3, 1, 1 }, { 0, 1, 3, 3, 3, -1, 2, 1, 0, 0 }, { 1, 2, -1, -1, 3, 2, 1, 0, 0, 0 },
             { -1, 2, 2, 3, -1, 3, 2, 1, 1, 1 }, { 1, 1, 0, 1, 2, -1, -1, 1, 1, -1 }, };
             
+    /**
+     * Method to get map according to user.
+     * @param num Number input by user
+     * @return Return the map
+     */
     public static int[][] getMap(int num){
         switch (num) {
         case 1:

@@ -2,9 +2,16 @@ package sweeper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+/**
+ * Class for logic strategies.
+ * @author bl41
+ *
+ */
 public class Strategy {
 
+    /**
+     * Random guessing strategy.
+     */
     public static void RGS() {
         ArrayList<int[]> uncovered = Game.getUncovered();
         System.out.println("Start Random Guessing!");
@@ -29,25 +36,15 @@ public class Strategy {
             System.out.println("YOU LOSE");
             System.exit(0);
         }
-        
-        // while (Game.probe(pb)) {
-        // NettleSweeper.printKB();
-        // uncovered = Game.getUncovered();
-        // System.out.println(uncovered.size());
-        // if (uncovered.size() == 0) {
-        // NettleSweeper.printKB();
-        // System.out.println("You WIN!!!");
-        // }
-        // rd = Game.getRandom(uncovered);
-        // choice = uncovered.get(rd);
-        // System.out.println(Arrays.toString(choice));
-        // pb = new Node(choice[0], choice[1],
-        // NettleSweeper.map[choice[0]][choice[1]]);
-        // }
     }
 
+    /**
+     * Single point strategy.
+     * @return Return true if successfully uncovered any cells
+     */
     public static boolean SPS() {
         System.out.println("Single Point Strategy!");
+        // Get unexplored cells
         ArrayList<int[]> uncovered = Game.getUncovered();
         if(uncovered.size() == 0){
             return true;
@@ -58,10 +55,10 @@ public class Strategy {
                 states.add(y);
             }
         }
-        while(states.contains('X')){
+        while(states.contains(Configurations.UNCOVER)){
             
             for (int[] i : uncovered) {
-            if (NettleSweeper.knowledgemap[i[0]][i[1]] == 'X') {
+            if (NettleSweeper.knowledgemap[i[0]][i[1]] == Configurations.UNCOVER) {
                 System.out.println("Attempting " + Arrays.toString(i));
                 Node current = new Node(i[0], i[1], NettleSweeper.knowledgemap[i[0]][i[1]]);
                 Game.setKBNeighbours(current, NettleSweeper.knowledgemap);
@@ -71,14 +68,15 @@ public class Strategy {
                 int mine = 0;
                 for (Node n : neighbours) {
                     Game.setKBNeighbours(n, NettleSweeper.knowledgemap);
-                    if (n.getState() != 'X' && n.getState() != 'P') {
+                    // If the the node has been probed
+                    if (n.getState() != Configurations.UNCOVER && n.getState() != Configurations.MARK) {
                         System.out.println("Checking " + Arrays.toString(n.getLocation()));
 
                         for (Node nei : n.getNeighbours()) {
-                            if (nei.getState() == 'X') {
+                            if (nei.getState() == Configurations.UNCOVER) {
                                 unknown++;
                             }
-                            if (nei.getState() == 'P') {
+                            if (nei.getState() == Configurations.MARK) {
                                 mine++;
                             }
                         }
@@ -88,34 +86,36 @@ public class Strategy {
 
                         if ((n.getState() - 48) >= unknown && (n.getState() - 48) > mine
                                 && unknown <= (n.getState() - 48 - mine)) {
+                            // If all marked neighbour
                             System.out.println("Mark!");
                             current.mark();
                             NettleSweeper.nettlenum -= 1;
                             NettleSweeper.knowledgemap[current.getX()][current.getY()] = (char) current.getState();
-                            System.out.println((char) current.getState());
                             NettleSweeper.printKB();
                             break;
                         } else if ((n.getState() - 48) == mine) {
+                            // If all free neighbour
                             current.setState(current.getX(), current.getY());
                             System.out.println("Probe!");
                             if(!Game.probe(current)){
                                 System.out.println("BOOOOOOOOOOOOOOOOOOOOOOM!!!");
                                 System.out.println("YOU LOSE");
                                 System.exit(0);
-                            } else {
-                                
                             }
                             NettleSweeper.printKB();
                             break;
                         } else {
                             System.out.println("Can not decide yet...");
                         }
+                        // Reset variable for next go
                         unknown = 0;
                         mine = 0;
                     }
                 }
             }
         }
+            // Check if current round uncovered any cell
+            // Return false when it didn't indicate no move can be make by this strategy
             states = new ArrayList<>();
             for(char[] x : NettleSweeper.knowledgemap){
                 for(char y : x){
@@ -133,69 +133,70 @@ public class Strategy {
         return true;
     }
 
+    /**
+     * Easy equation Strategy.
+     * @return Return true if successfully uncovered any cells
+     */
     public static boolean EES(){
         System.out.println("Try Easy Equation Strategy");
+        // Get unexplored cells
         ArrayList<int[]> uncovered = Game.getUncovered();
-        System.out.println(uncovered.size());
         ArrayList<Character> states = new ArrayList<>();
         for(char[] x : NettleSweeper.knowledgemap){
             for(char y : x){
                 states.add(y);
             }
         }
-        while(states.contains('X')){
+        while(states.contains(Configurations.UNCOVER)){
+            // Find uncleared cells
             ArrayList<Node> uncleared = Game.getUnclearedCell();
-            System.out.println(uncleared.size() + "Unclear cell");
-            for(Node n : uncleared){
-                System.out.println(Arrays.toString(n.getLocation()));
-            }
-            
+            System.out.println(uncleared.size() + " Unclear cell");
+            // Set uncleared cells to pairs
             ArrayList<Node[]> pairs = pairCells(uncleared);
-            System.out.println(pairs.size());
-            
+            // Check each pair
             for(Node[] pair : pairs){
                 Node cell1 = pair[0];
                 Node cell2 = pair[1];
                 
                 System.out.println("Checking " + Arrays.toString(cell1.getLocation()) + " and " + Arrays.toString(cell2.getLocation()));
-                if(cell1.getState() == 'P' || cell2.getState() == 'P'){
+                if(cell1.getState() == Configurations.MARK || cell2.getState() == Configurations.MARK){
                     System.out.println("Have a mark...");
                     continue;
                 }
                 int c1Marked = 0;
                 int c2Marked = 0;
-                
+                // Get unknown cells lists
                 ArrayList<Node> c1unknown = new ArrayList<>();
                 ArrayList<Node> c2unknown = new ArrayList<>();
                 
                 for(Node c1n : cell1.getNeighbours()){
-                    if(c1n.getState() == 'X'){
+                    if(c1n.getState() == Configurations.UNCOVER){
                         c1unknown.add(c1n);
                     }
                 }
-                
                 for(Node c2n : cell2.getNeighbours()){
-                    if(c2n.getState() == 'X'){
+                    if(c2n.getState() == Configurations.UNCOVER){
                         c2unknown.add(c2n);
                     }
                 }
-                
+                // Get number of marked cells
                 for(Node nei: cell1.getNeighbours()){
-                    if(nei.getState() == 'P'){
+                    if(nei.getState() == Configurations.MARK){
                         c1Marked++;
                     }
                 }
-                
                 for(Node nei: cell2.getNeighbours()){
-                    if(nei.getState() == 'P'){
+                    if(nei.getState() == Configurations.MARK){
                         c2Marked++;
                     }
                 }
-                
+                // Calculate diff
                 int diff = Math.abs(((cell1.getState() - 48) - c1Marked) - ((cell2.getState() - 48) - c2Marked));
                 System.out.println("diff " + diff);
+                // Check overlapping
                 ArrayList<Node> unoverlap = removeOverlap(c1unknown, c2unknown);
                 System.out.println("Unoverlap " + unoverlap.size());
+                // If fully overlapping
                 if(unoverlap.size() != 0){
                     if(diff == 0){
                         System.out.println("All Clear! Probe!");
@@ -209,7 +210,6 @@ public class Strategy {
                             NettleSweeper.printKB();
                             break;
                         }
-                        
                     } else {
                         if(diff == unoverlap.size()){
                             System.out.println("Mark All!");
@@ -225,7 +225,8 @@ public class Strategy {
                     }
                 }
             }
-            
+            // Check if current round uncovered any cell
+            // Return false when it didn't indicate no move can be make by this strategy
             states = new ArrayList<>();
             for(char[] x : NettleSweeper.knowledgemap){
                 for(char y : x){
@@ -241,13 +242,16 @@ public class Strategy {
             } else {
                 return true;
             }
-        
         }
-
-    return true;
-
+        return true;
     }
 
+    /**
+     * Method to check overlapping.
+     * @param unknown1 Unknown cell list of cell in pair
+     * @param unknown2 Unknown cell list of cell in pair
+     * @return Return array list of not overlapped cells only if fully overlapping
+     */
     public static ArrayList<Node> removeOverlap(ArrayList<Node> unknown1, ArrayList<Node> unknown2){
         
         ArrayList<Node> overlap1 = new ArrayList<>();
@@ -275,10 +279,14 @@ public class Strategy {
         }
     }
 
+    /**
+     * Set uncleared cell to pairs.
+     * @param uncleared Array list of uncleared cell
+     * @return Return an array list of paired cells
+     */
     public static ArrayList<Node[]> pairCells(ArrayList<Node> uncleared) {
         ArrayList<Node[]> pairs = new ArrayList<>();
         for (int i = 0; i < uncleared.size(); i++) {
-            // if(i != uncleared.size() - 1){
             Node current = uncleared.get(i);
             for (int j = i; j < uncleared.size(); j++) {
                 if (j != uncleared.size() - 1) {
@@ -289,10 +297,7 @@ public class Strategy {
                     }
                 }
             }
-            // }
-
         }
-
         return pairs;
     }
 }

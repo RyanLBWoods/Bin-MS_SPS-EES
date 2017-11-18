@@ -1,5 +1,9 @@
 package sweeper;
-
+/**
+ * Maps of medium level.
+ * @author bl41
+ *
+ */
 public class MediumMap {
 
     private static int[][] nworld1 = new int[][] { { 0, 0, 0, 1, 1, 1, 0, 1, -1 }, { 0, 0, 1, 2, -1, 1, 0, 1, 1 },
@@ -27,6 +31,11 @@ public class MediumMap {
             { 1, 2, 2, 1, 1, 2, -1, 3, -1 }, { 1, -1, -1, 2, 1, 1, 2, -1, 2 }, { 2, 3, 4, -1, 1, 0, 1, 1, 1 },
             { 1, -1, 2, 1, 1, 0, 0, 0, 0 }, };
 
+    /**
+     * Method to get map according to user.
+     * @param num Number input by user
+     * @return Return the map
+     */
     public static int[][] getMap(int num){
         switch (num) {
         case 1:

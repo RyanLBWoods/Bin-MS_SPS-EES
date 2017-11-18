@@ -1,15 +1,16 @@
 package sweeper;
 
 import java.util.ArrayList;
-
+/**
+ * Node class for map cells.
+ * @author bl41
+ *
+ */
 public class Node {
 
     private int x;
     private int y;
     private int state;
-    
-//    private ArrayList<Node> uncovered;
-//    private int marked;
     
     Node luNeighbour;
     Node uNeighbour;
@@ -20,8 +21,11 @@ public class Node {
     Node dNeighbour;
     Node rdNeighbour;
     
-    ArrayList<Node> neighbours = new ArrayList<>();
-    
+    /**Constructor.
+     * @param x X-coordinate
+     * @param y Y-coordinate
+     * @param state State of cell
+     */
     public Node(int x, int y, int state){
         this.x = x;
         this.y = y;

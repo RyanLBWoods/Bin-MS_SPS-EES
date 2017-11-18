@@ -1,9 +1,12 @@
 package sweeper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-
+/**
+ * Main class represents the game agent.
+ * @author bl41
+ *
+ */
 public class NettleSweeper {
 
     public static char[][] knowledgeBase1 = { { 'X', 'X', 'X', 'X', 'X' }, { 'X', 'X', 'X', 'X', 'X' },
@@ -30,12 +33,19 @@ public class NettleSweeper {
     public static int nettlenum;
     public static Scanner sc = new Scanner(System.in);
 
+    /**
+     * Method to show the current status of knowledge base.
+     */
     public static void printKB() {
         for(char[] row: knowledgemap){
             System.out.println(Arrays.toString(row));
         }
     }
 
+    /**
+     * Main method of the project.
+     * @param args Arguments
+     */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
@@ -69,23 +79,25 @@ public class NettleSweeper {
             break;
         }
 
-        ArrayList<int[]> nettlePosition = Game.getNettlePosition(map);
+        // Deduce the reachable zero cell
         Node start = new Node(0, 0, map[0][0]);
         System.out.println("Start " + Arrays.toString(start.getLocation()));
         Game.deduce(start);
 
-        // Strategy.RGS();
+        // Explore the map
         while(nettlenum > 0){
             if (!Strategy.SPS() && !Strategy.EES()) {
-//            Strategy.EES();
-//            if(!Strategy.EES()){
                 Strategy.RGS();
-//            }
             }
         }
-            System.out.println("You Win!!!");
+        // If all nettles have been found, tell user game win
+        System.out.println("You Win!!!");
     }
 
+    /**
+     * Method to select level.
+     * @return Return level number
+     */
     public static int selectLevel() {
         int lvl = 0;
         System.out.println("Please Select Level(1, 2, 3) ");
@@ -96,6 +108,10 @@ public class NettleSweeper {
         return lvl;
     }
 
+    /**
+     * Method to select map.
+     * @return Return map number
+     */
     public static int selectMap() {
         int num = 0;
         System.out.println("Please Select Map Number (1 ~ 5)");
