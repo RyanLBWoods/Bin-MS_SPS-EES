@@ -1,6 +1,8 @@
 package sweeper;
+
 /**
  * Maps of medium level.
+ * 
  * @author bl41
  *
  */
@@ -33,26 +35,28 @@ public class MediumMap {
 
     /**
      * Method to get map according to user.
-     * @param num Number input by user
+     * 
+     * @param num
+     *            Number input by user
      * @return Return the map
      */
-    public static int[][] getMap(int num){
+    public static int[][] getMap(int num) {
         switch (num) {
         case 1:
             return nworld1;
 
         case 2:
             return nworld2;
-            
+
         case 3:
             return nworld3;
-            
+
         case 4:
             return nworld4;
-            
+
         case 5:
             return nworld5;
-            
+
         default:
             System.out.println("Invalid number");
             return null;
