@@ -201,9 +201,9 @@ public class Strategy {
                 System.out.println("diff " + diff);
                 // Check overlapping
                 ArrayList<Node> unoverlap = removeOverlap(c1unknown, c2unknown);
-                System.out.println("Unoverlap " + unoverlap.size());
                 // If fully overlapping
                 if (unoverlap.size() != 0) {
+                    System.out.println("Unoverlap " + unoverlap.size());
                     if (diff == 0) {
                         System.out.println("All Clear! Probe!");
                         for (Node n : unoverlap) {
@@ -247,6 +247,7 @@ public class Strategy {
                 NettleSweeper.printKB();
                 return false;
             } else {
+                System.out.println("Current EES Succeed, Resort back to Single Point Strategy...");
                 return true;
             }
         }
